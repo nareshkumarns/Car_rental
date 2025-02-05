@@ -25,5 +25,6 @@ public class SearchCarController {
             @RequestParam String brand
     ){
         return carRepository.searchCar(brand);
+
     }
 }
