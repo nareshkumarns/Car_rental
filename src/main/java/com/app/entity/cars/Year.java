@@ -15,7 +15,7 @@ public class Year {
     private Long id;
 
     @Column(name = "year", nullable = false)
-    private String year;
+    private int year;
 
     public Long getId() {
         return id;
@@ -25,11 +25,11 @@ public class Year {
         this.id = id;
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 }

@@ -19,12 +19,13 @@ public class SearchCarController {
         this.carRepository = carRepository;
     }
 
-    //http://localhost:8080/api/v1/search-car/cars?brand=honda
+    //http://localhost:8080/api/v1/search-car/cars?param=honda
     @GetMapping("/cars")
     public List<Car> searchCars(
-            @RequestParam String brand
+            @RequestParam String param
     ){
-        return carRepository.searchCar(brand);
+        return carRepository.searchCar(param);
 
     }
+
 }

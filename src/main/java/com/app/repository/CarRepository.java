@@ -11,7 +11,11 @@ import java.util.List;
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query(
-            "SELECT c FROM Car c JOIN c.brand b Join c.transmission t" +
+            "SELECT c FROM Car c " +
+         "JOIN c.brand b " +
+         "Join c.transmission t" +
+                    //"join c.model m" +
+                   // "join c.year y" +
                    " WHERE b.name = :details or t.type=:details")
 
       List<Car> searchCar(
