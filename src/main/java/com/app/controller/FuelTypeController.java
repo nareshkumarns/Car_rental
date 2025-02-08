@@ -3,6 +3,7 @@ package com.app.controller;
 import com.app.entity.cars.FuelType;
 import com.app.service.FuelTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,10 @@ public class FuelTypeController {
     public FuelTypeController(FuelTypeService fuelTypeService) {
         this.fuelTypeService = fuelTypeService;
     }
-    @GetMapping
-    public ResponseEntity<List<FuelType>> getAllFuelTypes() {
-        return ResponseEntity.ok(fuelTypeService.getAllFuelTypes());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<FuelType>> getAllFuelTypes() {
+//        return ResponseEntity.ok(fuelTypeService.getAllFuelTypes());
+//    }
     @GetMapping("/{id}")
     public ResponseEntity<FuelType> getFuelTypeById(@PathVariable Long id) {
         return ResponseEntity.ok(fuelTypeService.getFuelTypeById(id));
@@ -38,5 +39,15 @@ public class FuelTypeController {
     public ResponseEntity<Void> deleteFuelType(@PathVariable Long id) {
         fuelTypeService.deleteFuelType(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public Page<FuelType> getAllFuelTypes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return fuelTypeService.getFuelTypes(page, size, sortBy, direction);
     }
 }

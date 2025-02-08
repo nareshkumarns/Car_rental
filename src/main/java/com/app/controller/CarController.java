@@ -3,6 +3,7 @@ package com.app.controller;
 import com.app.entity.cars.Car;
 import com.app.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,10 @@ public class CarController {
     public CarController(CarService carService) {
         this.carService = carService;
     }
-    @GetMapping
-    public ResponseEntity<List<Car>> getAllCars() {
-        return ResponseEntity.ok(carService.getAllCars());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Car>> getAllCars() {
+//        return ResponseEntity.ok(carService.getAllCars());
+//    }
     @GetMapping("/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable Long id) {
         return ResponseEntity.ok(carService.getCarById(id));
@@ -38,5 +39,14 @@ public class CarController {
     public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
         carService.deleteCar(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping
+    public Page<Car> getAllCars(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return carService.getCars(page, size, sortBy, direction);
     }
 }

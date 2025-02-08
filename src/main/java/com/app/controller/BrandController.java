@@ -3,6 +3,7 @@ package com.app.controller;
 import com.app.entity.cars.Brand;
 import com.app.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +18,11 @@ public class BrandController {
         this.brandService = brandService;
     }
     // GET all brands
-    @GetMapping
-    public ResponseEntity<List<Brand>> getAllBrands() {
-        return ResponseEntity.ok(brandService.getAllBrands());
-    }
-    // GET brand by id
+//    @GetMapping
+//    public ResponseEntity<List<Brand>> getAllBrands() {
+//        return ResponseEntity.ok(brandService.getAllBrands());
+//    }
+//    // GET brand by id
     @GetMapping("/{id}")
     public ResponseEntity<Brand> getBrandById(@PathVariable Long id) {
         return ResponseEntity.ok(brandService.getBrandById(id));
@@ -42,5 +43,14 @@ public class BrandController {
     public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
         brandService.deleteBrand(id);
         return ResponseEntity.noContent().build();
+    }
+      @GetMapping
+    public Page<Brand> getAllBrands(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return brandService.getBrands(page, size, sortBy, direction);
     }
 }

@@ -3,6 +3,7 @@ package com.app.controller;
 import com.app.entity.cars.Transmission;
 import com.app.service.TransmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +16,10 @@ public class TransmissionController {
     public TransmissionController(TransmissionService transmissionService) {
         this.transmissionService = transmissionService;
     }
-    @GetMapping
-    public ResponseEntity<List<Transmission>> getAllTransmissions() {
-        return ResponseEntity.ok(transmissionService.getAllTransmissions());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Transmission>> getAllTransmissions() {
+//        return ResponseEntity.ok(transmissionService.getAllTransmissions());
+//    }
     @GetMapping("/{id}")
     public ResponseEntity<Transmission> getTransmissionById(@PathVariable Long id) {
         return ResponseEntity.ok(transmissionService.getTransmissionById(id));
@@ -35,5 +36,15 @@ public class TransmissionController {
     public ResponseEntity<Void> deleteTransmission(@PathVariable Long id) {
         transmissionService.deleteTransmission(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public Page<Transmission> getAllTransmissions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return transmissionService.getTransmissions(page, size, sortBy, direction);
     }
 }

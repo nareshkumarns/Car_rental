@@ -3,6 +3,10 @@ package com.app.service;
 import com.app.entity.cars.Model;
 import com.app.repository.ModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +37,10 @@ public class ModelService {
     }
     public void deleteModel(Long id) {
         modelRepository.deleteById(id);
+    }
+    public Page<Model> getModels(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return modelRepository.findAll(pageable);
     }
 }

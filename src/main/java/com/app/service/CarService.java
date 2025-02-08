@@ -3,6 +3,10 @@ package com.app.service;
 import com.app.entity.cars.Car;
 import com.app.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,5 +36,10 @@ public class CarService {
     }
     public void deleteCar(Long id) {
         carRepository.deleteById(id);
+    }
+    public Page<Car> getCars(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return carRepository.findAll(pageable);
     }
 }
