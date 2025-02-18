@@ -42,4 +42,5 @@ public class CarService {
         Pageable pageable = PageRequest.of(page, size, sort);
         return carRepository.findAll(pageable);
     }
+
 }

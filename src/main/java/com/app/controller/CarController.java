@@ -49,4 +49,8 @@ public class CarController {
     ) {
         return carService.getCars(page, size, sortBy, direction);
     }
+
+    // Get total kilometers driven for all cars
+
+
 }
