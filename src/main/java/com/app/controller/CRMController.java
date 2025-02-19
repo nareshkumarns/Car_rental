@@ -6,6 +6,8 @@ import com.app.entity.evaluation.CustomerVisit;
 import com.app.repository.AgentRepository;
 import com.app.repository.AreaRepository;
 import com.app.repository.CustomerVisitRepository;
+import com.app.service.SmsService;
+import com.app.service.WhatsAppService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +21,16 @@ public class CRMController {
     private AreaRepository areaRepository;
     private AgentRepository agentRepository;
     private CustomerVisitRepository customerVisitRepository;
+    private SmsService smsService;
+    private WhatsAppService whatsAppService ;  // service for sending whatsapp message
 
-    public CRMController(AreaRepository areaRepository, AgentRepository agentRepository, CustomerVisitRepository customerVisitRepository) {
+    public CRMController(AreaRepository areaRepository, AgentRepository agentRepository, CustomerVisitRepository customerVisitRepository, SmsService smsService, WhatsAppService whatsAppService) {
         this.areaRepository = areaRepository;
         this.agentRepository = agentRepository;
         this.customerVisitRepository = customerVisitRepository;
+        this.smsService = smsService;
+
+        this.whatsAppService = whatsAppService;
     }
 
     @GetMapping
@@ -51,6 +58,12 @@ public class CRMController {
        customerVisit.setAgent(agent);
 
        customerVisitRepository.save(customerVisit);
+       //SMS
+        smsService.sendSms("+919701181517","Agent is now Allocated - Love U  Maa");
+       //WhatsAppMessage
+        whatsAppService.sendWhatsAppMessage("+919701181517", "Agent is now Allocated - Hello Darling");
+
+
         return "Agent is now Allocated";
 
     }
