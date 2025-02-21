@@ -17,6 +17,10 @@ public class Brand {
     @Column(name = "name", nullable = false)
     private String name;
 
+    public Brand(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

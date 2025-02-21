@@ -1,56 +1,34 @@
 package com.app.controller;
 
-import com.app.entity.cars.Brand;
-import com.app.service.BrandService;
+import com.app.config.ExcelHelperConfig;
+import com.app.payload.BrandDTO;
+import com.app.service.ExcelUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/brands")
 public class BrandController {
-    private final BrandService brandService;
-     @Autowired
-    public BrandController(BrandService brandService) {
-        this.brandService = brandService;
-    }
-    // GET all brands
-//    @GetMapping
-//    public ResponseEntity<List<Brand>> getAllBrands() {
-//        return ResponseEntity.ok(brandService.getAllBrands());
-//    }
-//    // GET brand by id
-    @GetMapping("/{id}")
-    public ResponseEntity<Brand> getBrandById(@PathVariable Long id) {
-        return ResponseEntity.ok(brandService.getBrandById(id));
-    }
-    // POST create a new brand
-    @PostMapping
-    public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
-        Brand createdBrand = brandService.createBrand(brand);
-        return ResponseEntity.ok(createdBrand);
-    }
-    // PUT update an existing brand
-    @PutMapping("/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable Long id, @RequestBody Brand brandDetails) {
-        return ResponseEntity.ok(brandService.updateBrand(id, brandDetails));
-    }
-    // DELETE a brand
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
-        brandService.deleteBrand(id);
-        return ResponseEntity.noContent().build();
-    }
-      @GetMapping
-    public Page<Brand> getAllBrands(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
-    ) {
-        return brandService.getBrands(page, size, sortBy, direction);
+
+    @Autowired
+    private ExcelUploadService excelUploadService;
+
+    @Autowired
+    private ExcelHelperConfig excelHelperConfig; // ✅ Add this
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadExcel(@RequestParam("file") MultipartFile file) {
+        if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            return ResponseEntity.badRequest().body("Please upload an Excel file!");
+        }
+
+        List<BrandDTO> brandDTOs = excelHelperConfig.parseExcelFile(file); // ✅ Fix: Use excelHelperConfig
+        excelUploadService.saveBrands(brandDTOs);
+
+        return ResponseEntity.ok("File uploaded successfully!");
     }
 }
